@@ -6,8 +6,8 @@ compatibility_date = "2025-06-04"
 enabled = true
 
 [[routes]]
-pattern = "${CUSTOM_DOMAIN}"
-custom_domain = true
+pattern = "${CUSTOM_DOMAIN}/*"
+zone_id = "${ZONE_ID}"
 
 [[d1_databases]]
 binding = "db"
