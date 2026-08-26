@@ -16,6 +16,7 @@ jobs:
     env:
       NAME: ${{ secrets.NAME || vars.NAME || 'cloud-mail' }}
       CUSTOM_DOMAIN: ${{ secrets.CUSTOM_DOMAIN || vars.CUSTOM_DOMAIN }}
+      ZONE_ID: ${{ secrets.ZONE_ID || vars.ZONE_ID }} 
       DOMAIN: ${{ secrets.DOMAIN || vars.DOMAIN }}
       ADMIN: ${{ secrets.ADMIN || vars.ADMIN }}
       JWT_SECRET: ${{ secrets.JWT_SECRET || vars.JWT_SECRET }}
@@ -105,6 +106,14 @@ jobs:
           
           if [ -z "$CUSTOM_DOMAIN" ]; then
             sed -i '/\[\[routes\]\]/,/^$/d' "$CONFIG_FILE"
+          else
+            # 替换 zone_id
+            if [ -n "$ZONE_ID" ]; then
+              sed -i "s|\${ZONE_ID}|${ZONE_ID}|g" "$CONFIG_FILE"
+            else
+              echo "❌ ZONE_ID is required when using route pattern"
+              exit 1
+            fi
           fi
           
           if [ "$(printf '%s' "$CLOUDFLARE_EMAIL" | tr '[:upper:]' '[:lower:]')" = "true" ]; then
